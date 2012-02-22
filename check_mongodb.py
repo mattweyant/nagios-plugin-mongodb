@@ -29,6 +29,7 @@ import textwrap
 
 try:
     import pymongo
+    import bson
 except ImportError, e:
     print e
     sys.exit(2)
@@ -162,7 +163,7 @@ def check_connections(con, warning, critical, perf_data):
             set_read_preference(con.admin)
             data = con.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1), ('repl', 1)]))
         except:
-            data = con.admin.command(pymongo.son.SON([('serverStatus', 1), ('repl', 1)]))
+            data = con.admin.command(bson.son.SON([('serverStatus', 1), ('repl', 1)]))
 
         current = float(data['connections']['current'])
         available = float(data['connections']['available'])
@@ -248,7 +249,7 @@ def check_memory(con, warning, critical, perf_data):
             set_read_preference(con.admin)
             data = con.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
         except:
-            data = con.admin.command(pymongo.son.SON([('serverStatus', 1)]))
+            data = con.admin.command(bson.son.SON([('serverStatus', 1)]))
 
 
         if not data['mem']['supported']:
@@ -287,7 +288,7 @@ def check_lock(con, warning, critical, perf_data):
             set_read_preference(con.admin)
             data = con.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
         except:
-            data = con.admin.command(pymongo.son.SON([('serverStatus', 1)]))
+            data = con.admin.command(bson.son.SON([('serverStatus', 1)]))
 
         #
         # calculate percentage
@@ -325,7 +326,7 @@ def check_flushing(con, warning, critical, avg, perf_data):
             set_read_preference(con.admin)
             data = con.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
         except:
-            data = con.admin.command(pymongo.son.SON([('serverStatus', 1)]))
+            data = con.admin.command(bson.son.SON([('serverStatus', 1)]))
 
         if avg:
             flush_time = float(data['backgroundFlushing']['average_ms'])
@@ -360,7 +361,7 @@ def index_miss_ratio(con, warning, critical, perf_data):
             set_read_preference(con.admin)
             data = con.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
         except:
-            data = con.admin.command(pymongo.son.SON([('serverStatus', 1)]))
+            data = con.admin.command(bson.son.SON([('serverStatus', 1)]))
 
         try:
             miss_ratio = float(data['indexCounters']['btree']['missRatio'])
@@ -397,7 +398,7 @@ def check_replset_state(con):
             set_read_preference(con.admin)
             data = con.admin.command(pymongo.son_manipulator.SON([('replSetGetStatus', 1)]))
         except:
-            data = con.admin.command(pymongo.son.SON([('replSetGetStatus', 1)]))
+            data = con.admin.command(bson.son.SON([('replSetGetStatus', 1)]))
 
         state = int(data['myState'])
 
@@ -438,7 +439,7 @@ def check_databases(con, warning, critical):
             set_read_preference(con.admin)
             data = con.admin.command(pymongo.son_manipulator.SON([('listDatabases', 1)]))
         except:
-            data = con.admin.command(pymongo.son.SON([('listDatabases', 1)]))
+            data = con.admin.command(bson.son.SON([('listDatabases', 1)]))
 
         count = len(data['databases'])
 
@@ -461,7 +462,7 @@ def check_collections(con, warning, critical):
             set_read_preference(con.admin)
             data = con.admin.command(pymongo.son_manipulator.SON([('listDatabases', 1)]))
         except:
-            data = con.admin.command(pymongo.son.SON([('listDatabases', 1)]))
+            data = con.admin.command(bson.son.SON([('listDatabases', 1)]))
 
         count = 0
         for db in data['databases']:
